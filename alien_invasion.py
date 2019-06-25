@@ -1,36 +1,21 @@
-import sys
 import pygame
 
 from settings import Settings
 from ship import Ship
+from event_handling import EventHandling
 
 
 def run_game(settings):
     screen = pygame.display.set_mode((settings.screen_width, settings.screen_height))
     pygame.display.set_caption(settings.title)
 
-    ship = Ship(screen)
+    ship = Ship(screen=screen, speed=(1, 1, 1, 1))
+    event_handling = EventHandling(ship)
 
     # Запуск основного цикла игры
     while True:
         # Отслеживание событий клавиатуры и мыши
-        for event in pygame.event.get():
-            print(event)
-
-            if event.type == pygame.QUIT:
-                sys.exit()
-            elif event.type == pygame.KEYDOWN:
-                if event.key == pygame.K_ESCAPE:
-                    sys.exit()
-                elif event.key == pygame.K_LEFT:
-                    ship.moving_left = True
-                elif event.key == pygame.K_RIGHT:
-                    ship.moving_right = True
-            elif event.type == pygame.KEYUP:
-                if event.key == pygame.K_LEFT:
-                    ship.moving_left = False
-                elif event.key == pygame.K_RIGHT:
-                    ship.moving_right = False
+        event_handling.processing_events()
 
         # При каждом проходе цикла перерисовывается экран
         screen.fill(settings.bg_color)
