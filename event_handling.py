@@ -17,7 +17,7 @@ class CustomEventHandling:
 class EventHandling:
     """Обработчик событий"""
 
-    def __init__(self, handler: CustomEventHandling):
+    def __init__(self, *handler: CustomEventHandling):
         """Инициализация обработчика событий"""
 
         self.handler = handler
@@ -40,12 +40,12 @@ class EventHandling:
 
         if event.key == pygame.K_ESCAPE:
             sys.exit()
-        else:
-            self.handler.processing_keydown_events(event.key)
+
+        for handler in self.handler:
+            handler.processing_keydown_events(event.key)
 
     def _processing_keyup_events(self, event):
         """Обработка событий при отпускании клавиш"""
 
-        self.handler.processing_keyup_events(event.key)
-
-
+        for handler in self.handler:
+            handler.processing_keyup_events(event.key)

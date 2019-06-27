@@ -3,12 +3,13 @@ from event_handling import CustomEventHandling
 
 
 class Ship(CustomEventHandling):
+    """Класс описывающий состояние и поведение космического корабля"""
 
-    def __init__(self, screen, speed=(0., 0., 0., 0.)):
+    def __init__(self, screen, speed_ship=(1., 1., 1., 1.)):
         """Инициализирует корабль и задает его начальную позицию"""
 
         self.screen = screen
-        self.speed = speed
+        self.speed = speed_ship
 
         # Загрузка изображения корабля и получение прямоугольника
         self.image = pygame.image.load('images/ship.bmp')
