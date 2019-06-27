@@ -45,33 +45,40 @@ class Ship(CustomEventHandling):
         self.rect.centerx = self.centerx
         self.rect.centery = self.centery
 
-    def blitme(self):
+    def draw(self):
         """Рисует корабль в текущей позиции."""
 
         self.screen.blit(self.image, self.rect)
+
+
+class EventHandlingStandardShip(CustomEventHandling):
+    """ Обработка событий для стандартного космического корабля """
+
+    def __init__(self, ship: Ship):
+        self.ship = ship
 
     # Overrides method in CustomEventHandling
     def processing_keydown_events(self, event_key):
         """Обработка событий при зажатии клавиш"""
 
         if event_key == pygame.K_LEFT:
-            self.moving_left = True
+            self.ship.moving_left = True
         elif event_key == pygame.K_RIGHT:
-            self.moving_right = True
+            self.ship.moving_right = True
         elif event_key == pygame.K_UP:
-            self.moving_up = True
+            self.ship.moving_up = True
         elif event_key == pygame.K_DOWN:
-            self.moving_down = True
+            self.ship.moving_down = True
 
     # Overrides method in CustomEventHandling
     def processing_keyup_events(self, event_key):
         """Обработка событий при отпускании клавиш"""
 
         if event_key == pygame.K_LEFT:
-            self.moving_left = False
+            self.ship.moving_left = False
         elif event_key == pygame.K_RIGHT:
-            self.moving_right = False
+            self.ship.moving_right = False
         elif event_key == pygame.K_UP:
-            self.moving_up = False
+            self.ship.moving_up = False
         elif event_key == pygame.K_DOWN:
-            self.moving_down = False
+            self.ship.moving_down = False

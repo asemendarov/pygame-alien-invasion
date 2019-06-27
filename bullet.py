@@ -1,18 +1,20 @@
 import pygame
-from pygame.sprite import Sprite
+
+from ship import Ship
+from pygame.sprite import Sprite, Group
 from event_handling import CustomEventHandling
 
 
-class Bullet(Sprite, CustomEventHandling):
-    """Класс описывающий состояние и поведение пуль выпускаемых космическим кораблем"""
+class Bullet(Sprite):
+    """Класс описывающий состояние и поведение пуль выпущенных космическим кораблем"""
 
-    def __init__(self, screen, ship, bullets, bullet_speed_factor=1,
-                 bullet_width=3, bullet_height=15, bullet_color=(60, 60, 60)):
+    def __init__(self, screen, ship, bullet_speed_factor=1, bullet_width=3,
+                 bullet_height=15, bullet_color=(60, 60, 60)):
+
         super().__init__()
 
         self.screen = screen
         self.ship = ship
-        self.bullets = bullets
 
         # Параметры пули
         self.bullet_speed_factor = bullet_speed_factor
@@ -38,20 +40,58 @@ class Bullet(Sprite, CustomEventHandling):
         # Обновление позиции прямоугольника
         self.rect.y = self.y
 
-    def draw_bullet(self):
+    def draw(self):
         """Вывод пули на экран"""
 
         pygame.draw.rect(self.screen, self.bullet_color, self.rect)
+
+
+class GroupBullet:
+    """ Группы для хранения пуль """
+
+    def __init__(self, group: Group, bullet: Bullet):
+        self.group = group
+        self.bullet = bullet
+
+    def add(self):
+        """ Добавление пули в группу """
+
+        self.group.add(Bullet(
+            self.bullet.screen, self.bullet.ship, self.bullet.bullet_speed_factor,
+            self.bullet.bullet_width, self.bullet.bullet_height, self.bullet.bullet_color
+        ))
+
+    def update(self):
+        """ Обновление положения всех пуль выпущенных космическим кораблем """
+
+        self.group.update()
+
+    def remove(self):
+        """ Удаление пуль, вышедших за край экрана по оси Y """
+
+        for bullet in self.group.copy():
+            if bullet.rect.bottom <= 0:
+                self.group.remove(bullet)
+
+    def draw(self):
+        """ Вывод на экран всех пуль выпущенных космическим кораблем """
+
+        for bullet in self.group.sprites():
+            bullet.draw()
+
+
+class EventHandlingStandardBullet(CustomEventHandling):
+    """ Обработка событий для стандартной пули """
+
+    def __init__(self, group_bullet: GroupBullet):
+        self.group_bullet = group_bullet
 
     # Overrides method in CustomEventHandling
     def processing_keydown_events(self, event_key):
         """Обработка событий при зажатии клавиш"""
 
         if event_key == pygame.K_SPACE:
-            self.bullets.add(Bullet(
-                self.screen, self.ship, self.bullets, self.bullet_speed_factor,
-                self.bullet_width, self.bullet_height, self.bullet_color
-            ))
+            self.group_bullet.add()
 
     # Overrides method in CustomEventHandling
     def processing_keyup_events(self, event_key):
