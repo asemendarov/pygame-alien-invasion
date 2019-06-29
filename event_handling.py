@@ -3,27 +3,27 @@ import pygame
 
 
 class CustomEventHandling:
-    """Пользовательская обработка событий"""
+    """ Пользовательская обработка событий """
 
     def processing_keydown_events(self, event_key):
-        """Обработка событий при зажатии клавиш"""
+        """ Обработка событий при зажатии клавиш """
         pass
 
     def processing_keyup_events(self, event_key):
-        """Обработка событий при отпускании клавиш"""
+        """ Обработка событий при отпускании клавиш """
         pass
 
 
 class EventHandling:
-    """Обработчик событий"""
+    """ Обработчик событий """
 
     def __init__(self, *handler: CustomEventHandling):
-        """Инициализация обработчика событий"""
+        """ Инициализация обработчика событий """
 
         self.handler = handler
 
     def processing_events(self):
-        """Обработка всех событий"""
+        """ Обработка всех событий """
 
         for event in pygame.event.get():
             print(event)
@@ -36,7 +36,7 @@ class EventHandling:
                 self._processing_keyup_events(event)
 
     def _processing_keydown_events(self, event):
-        """Обработка событий при зажатии клавиш"""
+        """ Обработка событий при зажатии клавиш """
 
         if event.key == pygame.K_ESCAPE:
             sys.exit()
@@ -45,7 +45,7 @@ class EventHandling:
             handler.processing_keydown_events(event.key)
 
     def _processing_keyup_events(self, event):
-        """Обработка событий при отпускании клавиш"""
+        """О бработка событий при отпускании клавиш """
 
         for handler in self.handler:
             handler.processing_keyup_events(event.key)

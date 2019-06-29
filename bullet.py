@@ -1,12 +1,11 @@
 import pygame
 
-from ship import Ship
 from pygame.sprite import Sprite, Group
 from event_handling import CustomEventHandling
 
 
 class Bullet(Sprite):
-    """Класс описывающий состояние и поведение пуль выпущенных космическим кораблем"""
+    """ Класс описывающий состояние и поведение пуль выпущенных космическим кораблем """
 
     def __init__(self, screen, ship, bullet_speed_factor=1, bullet_width=3,
                  bullet_height=15, bullet_color=(60, 60, 60)):
@@ -32,7 +31,7 @@ class Bullet(Sprite):
 
     # Overrides method in Sprite
     def update(self):
-        """Перемещает пулю вверх по экрану"""
+        """ Перемещает пулю вверх по экрану """
 
         # Обновление позиции пули в вещественном формате
         self.y -= self.bullet_speed_factor
@@ -41,7 +40,7 @@ class Bullet(Sprite):
         self.rect.y = self.y
 
     def draw(self):
-        """Вывод пули на экран"""
+        """ Вывод пули на экран """
 
         pygame.draw.rect(self.screen, self.bullet_color, self.rect)
 

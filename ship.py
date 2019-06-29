@@ -3,10 +3,10 @@ from event_handling import CustomEventHandling
 
 
 class Ship(CustomEventHandling):
-    """Класс описывающий состояние и поведение космического корабля"""
+    """ Класс описывающий состояние и поведение космического корабля """
 
     def __init__(self, screen, speed_ship=(1., 1., 1., 1.)):
-        """Инициализирует корабль и задает его начальную позицию"""
+        """ Инициализирует корабль и задает его начальную позицию """
 
         self.screen = screen
         self.speed = speed_ship
@@ -31,7 +31,7 @@ class Ship(CustomEventHandling):
         self.moving_down = False
 
     def update(self):
-        """Обновляет позицию корабля с учетом флага."""
+        """ Обновляет позицию корабля с учетом флага """
 
         if self.moving_left and self.rect.left > self.screen_rect.left:
             self.centerx -= self.speed[3]
@@ -46,7 +46,7 @@ class Ship(CustomEventHandling):
         self.rect.centery = self.centery
 
     def draw(self):
-        """Рисует корабль в текущей позиции."""
+        """ Рисует корабль в текущей позиции """
 
         self.screen.blit(self.image, self.rect)
 
@@ -59,7 +59,7 @@ class EventHandlingStandardShip(CustomEventHandling):
 
     # Overrides method in CustomEventHandling
     def processing_keydown_events(self, event_key):
-        """Обработка событий при зажатии клавиш"""
+        """ Обработка событий при зажатии клавиш """
 
         if event_key == pygame.K_LEFT:
             self.ship.moving_left = True
@@ -72,7 +72,7 @@ class EventHandlingStandardShip(CustomEventHandling):
 
     # Overrides method in CustomEventHandling
     def processing_keyup_events(self, event_key):
-        """Обработка событий при отпускании клавиш"""
+        """ Обработка событий при отпускании клавиш """
 
         if event_key == pygame.K_LEFT:
             self.ship.moving_left = False
