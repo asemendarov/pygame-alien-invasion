@@ -4,3 +4,5 @@ class Settings:
     title = 'Alien Invasion'
     screen_width, screen_height = (1200, 800)
     bg_color = (230, 230, 230)
+
+    ship_limit = 3

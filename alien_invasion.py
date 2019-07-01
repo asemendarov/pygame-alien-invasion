@@ -1,12 +1,15 @@
 import pygame
 
+from time import sleep
+
 from pygame.sprite import Group
 
 from ship import Ship, EventHandlingStandardShip
 from bullet import Bullet, GroupBullet, EventHandlingStandardBullet
 from alien import Alien, GroupAlien, EventHandlingStandardAlien
-from settings import Settings
 from event_handling import EventHandling
+from game_stats import GameStats
+from settings import Settings
 
 
 def get_number_aliens_x(alien_width):
@@ -49,6 +52,39 @@ def create_fleet(screen, group_alien, ship):
             create_alien(screen, group_alien, alien_number, row_number)
 
 
+def ship_hit(stats, screen, ship, group_alien, group_bullet):
+    """ Обрабатывает столкновение корабля с пришельцем """
+
+    if stats.ships_left <= 0:
+        stats.game_active = False
+        return
+
+    # Уменьшение ships_left
+    stats.ships_left -= 1
+
+    # Очистка списков пришельцев и пуль
+    group_alien.group.empty()
+    group_bullet.group.empty()
+
+    # Создание нового флота и размещение корабля в центре
+    create_fleet(screen, group_alien, ship)
+    ship.restart()
+
+    # Пауза
+    sleep(0.5)
+
+
+def check_aliens_bottom(stats, screen, ship, group_alien, group_bullet):
+    """ Проверяет, добрались ли пришельцы до нижнего края экрана """
+
+    screen_rect = screen.get_rect()
+    for alien in group_alien.group.sprites():
+        if alien.rect.bottom >= screen_rect.bottom:
+            # Происходит то же, что при столкновении с кораблем
+            ship_hit(stats, screen, ship, group_alien, group_bullet)
+            break
+
+
 def run_game():
     screen = pygame.display.set_mode((Settings.screen_width, Settings.screen_height))
     pygame.display.set_caption(Settings.title)
@@ -71,30 +107,50 @@ def run_game():
 
     create_fleet(screen, group_alien, ship)
 
+    # Создание экземпляра для хранения игровой статистики
+    stats = GameStats()
+
     # Запуск основного цикла игры
     while True:
         # Отслеживание событий клавиатуры и мыши
         event_handling.processing_events()
 
-        # При каждом проходе цикла перерисовывается экран
-        screen.fill(Settings.bg_color)
+        if stats.game_active:
+            # При каждом проходе цикла перерисовывается экран
+            screen.fill(Settings.bg_color)
 
-        # Обновление положения космического корабля и вывод его на экран
-        ship.update()
-        ship.draw()
+            # Обновление положения космического корабля и вывод его на экран
+            ship.update()
+            ship.draw()
 
-        # Обновление, удаление, вывод на экран пуль выпущенных космическим кораблем
-        group_bullet.update()
-        group_bullet.remove()
-        group_bullet.draw()
+            # Обновление, удаление, вывод на экран пуль выпущенных космическим кораблем
+            group_bullet.update()
+            group_bullet.remove()
+            group_bullet.draw()
 
-        # Обновление, удаление, вывод на экран пришельцев
-        group_alien.update()
-        group_alien.remove()
-        group_alien.draw()
+            # Обновление, удаление, вывод на экран пришельцев
+            group_alien.update()
+            group_alien.remove()
+            group_alien.draw()
 
-        # Отображение последнего прорисованного экрана
-        pygame.display.flip()
+            check_aliens_bottom(stats, screen, ship, group_alien, group_bullet)
+
+            # Проверка попаданий в пришельцев
+            # При обнаружении попадания удалить пулю и пришельца
+            collisions = pygame.sprite.groupcollide(group_bullet.group, group_alien.group, True, True)
+
+            # Проверка коллизий "пришелец-корабль"
+            if pygame.sprite.spritecollideany(ship, group_alien.group):
+                ship_hit(stats, screen, ship, group_alien, group_bullet)
+
+            # Восстановление флота пришельцев
+            if len(group_alien.group) == 0:
+                # Уничтожение существующих пуль и создание нового флота
+                group_bullet.group.empty()  # empty(), который удаляет все существующие спрайты из группы
+                create_fleet(screen, group_alien, ship)
+
+            # Отображение последнего прорисованного экрана
+            pygame.display.flip()
 
 
 def main():

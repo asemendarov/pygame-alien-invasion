@@ -69,7 +69,7 @@ class GroupAlien:
     def update(self):
         """ Обновление положения всех пришельцев """
 
-        self.check_fleet_edges()
+        self._check_fleet_edges()
         self.group.update()
 
     def remove(self):
@@ -83,14 +83,15 @@ class GroupAlien:
         for alien in self.group.sprites():
             alien.draw()
 
-    def check_fleet_edges(self):
+    def _check_fleet_edges(self):
         """ Реагирует на достижение пришельцем края экрана """
+
         for alien in self.group.sprites():
             if alien.check_edges():
-                self.change_fleet_direction()
+                self._change_fleet_direction()
                 break
 
-    def change_fleet_direction(self):
+    def _change_fleet_direction(self):
         """ Опускает весь флот и меняет направление флота """
 
         for alien in self.group.sprites():

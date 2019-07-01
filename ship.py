@@ -50,6 +50,11 @@ class Ship(CustomEventHandling):
 
         self.screen.blit(self.image, self.rect)
 
+    def restart(self):
+        """ Размещает корабль в центре нижней стороны """
+
+        self.__init__(self.screen, self.speed)
+
 
 class EventHandlingStandardShip(CustomEventHandling):
     """ Обработка событий для стандартного космического корабля """
